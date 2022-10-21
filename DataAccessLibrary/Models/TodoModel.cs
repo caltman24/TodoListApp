@@ -13,12 +13,27 @@ namespace DataAccessLibrary.Models
     /// </summary>
     public class TodoModel
     {
+        /// <summary>
+        /// Unique Identifer for todo
+        /// </summary>
         [BsonId]
         public Guid Id { get; } = Guid.NewGuid();
+
+        /// <summary>
+        /// Title of todo
+        /// </summary>
         [BsonElement("title")]
         public string? Title { get; set; }
+
+        /// <summary>
+        /// Determine if todo is complete
+        /// </summary>
         [BsonElement("isComplete")]
         public bool IsComplete { get; set; }
+
+        /// <summary>
+        /// Date and time todo was created
+        /// </summary>
         [BsonElement("created")]
         public DateTime Created { get; set; }
 
