@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 namespace DataAccessLibrary
 {
     /// <summary>
-    /// MongoDB data access layer
+    /// MongoDB data access layer. This class can not be inherited
     /// </summary>
-    public class MongoDBDataAccess
+    public sealed class MongoDBDataAccess
     {
         private readonly IMongoDatabase _db;
 

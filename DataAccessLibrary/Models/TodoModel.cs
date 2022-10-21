@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace DataAccessLibrary.Models
 {
+    /// <summary>
+    /// Represents the Todo data model
+    /// </summary>
     public class TodoModel
     {
         [BsonId]
