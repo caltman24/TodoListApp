@@ -65,5 +65,24 @@ namespace DataAccessLibrary
 
             return collection.Find(filter).FirstOrDefault();
         }
+
+        /// <summary>
+        /// Upsert a record into a collection.
+        /// </summary>
+        /// <remarks> If the record exists it will be replaced, else an update will not occur and new BsonDocument will be inserted</remarks>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="table">Collection name</param>
+        /// <param name="record">Record to upsert</param>
+        /// <param name="id">Id of record to update</param>
+        public void UpsertRecord<T>(string table, T record, Guid id)
+        {
+            var collection = _db.GetCollection<T>(table);
+            collection.ReplaceOne(
+                new BsonDocument("_id", new BsonBinaryData(id, GuidRepresentation.Standard)),
+                record,
+                new ReplaceOptions() { IsUpsert = true }
+            );
+        }
+
     }
 }
