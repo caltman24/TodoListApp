@@ -2,19 +2,29 @@
 using DataAccessLibrary;
 using DataAccessLibrary.Models;
 
-MongoDBDataAccess db = new("TodoListApp", GetConnectionString());
+IMongoDBDataAccess db = new MongoDBDataAccess("TodoListApp", GetConnectionString());
 string collectionName = "todos";
 
-TodoModel todo = new()
+TodoModel todo1 = new()
 {
     Title = "dishes",
-    Created = DateTime.Now,
     IsComplete = true,
 };
 
-CreateTodo(todo);
+TodoModel todo2 = new()
+{
+    Title = "homework",
+    IsComplete = false,
+};
 
+CreateTodo(todo1);
+CreateTodo(todo2);
 ReadTodos();
+
+todo2.Title = "Eat some pizza";
+UpdateTodo(todo2);
+
+DeleteTodo(todo1);
 
 Console.ReadLine();
 
@@ -24,11 +34,29 @@ void CreateTodo(TodoModel todo)
     Console.WriteLine($"Todo created: {todo.Title} {todo.Created}");
 }
 
+void DeleteTodo(TodoModel todo)
+{
+    db.DeleteRecordById<TodoModel>(collectionName, todo.Id);
+    Console.WriteLine($"Todo Deleted: {todo.Title}");
+}
+
+void UpdateTodo(TodoModel todo)
+{
+    todo.Updated = DateTime.Now;
+    db.UpsertRecord(collectionName, todo, todo.Id);
+    Console.WriteLine($"Todo updated: {todo.Title}");
+}
+
 void ReadTodos()
 {
     var todos = db.LoadRecords<TodoModel>(collectionName);
 
-    if (todos is null || todos.Count <= 0) Console.WriteLine("No Todos");
+    if (todos is null || todos.Count <= 0)
+    {
+        Console.WriteLine("No Todos");
+        return;
+    }
+
     todos?.ForEach(t =>
     {
         Console.WriteLine($"{t.Title}");

@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoListUI", "TodoListUI\TodoListUI.csproj", "{8282C134-77CA-4A02-A38B-D1FC560AFEDA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoListUI", "TodoListUI\TodoListUI.csproj", "{8282C134-77CA-4A02-A38B-D1FC560AFEDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLibrary", "DataAccessLibrary\DataAccessLibrary.csproj", "{F40B65FB-68A6-4417-9D78-434B76A68ADC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLibrary", "DataAccessLibrary\DataAccessLibrary.csproj", "{F40B65FB-68A6-4417-9D78-434B76A68ADC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoListAPI", "TodoListAPI\TodoListAPI.csproj", "{B3EF13BE-8103-44D3-8449-31CBA3B6C2FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{F40B65FB-68A6-4417-9D78-434B76A68ADC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F40B65FB-68A6-4417-9D78-434B76A68ADC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F40B65FB-68A6-4417-9D78-434B76A68ADC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3EF13BE-8103-44D3-8449-31CBA3B6C2FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3EF13BE-8103-44D3-8449-31CBA3B6C2FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3EF13BE-8103-44D3-8449-31CBA3B6C2FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3EF13BE-8103-44D3-8449-31CBA3B6C2FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

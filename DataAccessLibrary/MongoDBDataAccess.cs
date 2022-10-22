@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 namespace DataAccessLibrary
 {
     /// <summary>
-    /// MongoDB data access layer. This class can not be inherited
+    /// Implements IMongoDBDataAccess as a data access layer. This class can not be inherited
     /// </summary>
-    public sealed class MongoDBDataAccess
+    public sealed class MongoDBDataAccess : IMongoDBDataAccess
     {
         private readonly IMongoDatabase _db;
 
@@ -30,6 +30,7 @@ namespace DataAccessLibrary
         /// <summary>
         /// Insert a record into a collection
         /// </summary>
+        /// <remarks>Use <see cref="UpsertRecord"/> instead you would rather do an upsert</remarks>
         /// <typeparam name="T"></typeparam>
         /// <param name="table">name of collection</param>
         /// <param name="record">record to insert</param>
@@ -82,6 +83,19 @@ namespace DataAccessLibrary
                 record,
                 new ReplaceOptions() { IsUpsert = true }
             );
+        }
+
+        /// <summary>
+        /// Delete a record from a collection.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="table">Collection name</param>
+        /// <param name="id">Id of record to delete</param>
+        public void DeleteRecordById<T>(string table, Guid id)
+        {
+            var collection = _db.GetCollection<T>(table);
+            var filter = Builders<T>.Filter.Eq("Id", id);
+            collection.DeleteOne(filter);
         }
 
     }
