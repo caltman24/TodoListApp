@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using DataAccessLibrary;
 using DataAccessLibrary.Models;
+using System.Collections.Generic;
 
 namespace TodoListAPI.Controllers;
 
@@ -20,14 +21,30 @@ public class TodosController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(
+        StatusCodes.Status200OK, 
+        Type = typeof(IEnumerable<TodoModel>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<IEnumerable<TodoModel>> GetAll()
+    public IActionResult GetAllTodos()
     {
         var todos = _db.LoadRecords<TodoModel>(_table);
         if (todos is null) return NotFound();
         return Ok(todos);
+    }
 
+    [HttpGet("{id}", Name ="TodoById")]
+    public IActionResult GetTodoById(Guid id)
+    {
+        return Ok();
+    }
+
+
+    [HttpPost]
+    // Todo: use a DTO instead of TodoModel
+    public IActionResult CreateTodo([FromBody] TodoModel todo)
+    {
+        _db.UpsertRecord(_table, todo, todo.Id);
+        return Ok();
     }
 }
 

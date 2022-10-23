@@ -17,9 +17,11 @@ namespace DataAccessLibrary.Models
         public Guid Id { get; } = Guid.NewGuid();
 
         [BsonElement("title")]
+        [BsonRequired]
         public string? Title { get; set; }
 
         [BsonElement("isComplete")]
+        [BsonRequired]
         public bool IsComplete { get; set; }
 
         [BsonElement("created")]
