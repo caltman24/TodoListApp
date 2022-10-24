@@ -75,7 +75,7 @@ namespace DataAccessLibrary
         /// <param name="table">Collection name</param>
         /// <param name="record">Record to upsert</param>
         /// <param name="id">Id of record to update</param>
-        public void UpsertRecord<T>(string table, T record, Guid id)
+        public T? UpsertRecord<T>(string table, T record, Guid id)
         {
             var collection = _db.GetCollection<T>(table);
             collection.ReplaceOne(
@@ -83,6 +83,7 @@ namespace DataAccessLibrary
                 record,
                 new ReplaceOptions() { IsUpsert = true }
             );
+            return LoadRecordById<T>(table, id);
         }
 
         /// <summary>
@@ -91,11 +92,12 @@ namespace DataAccessLibrary
         /// <typeparam name="T"></typeparam>
         /// <param name="table">Collection name</param>
         /// <param name="id">Id of record to delete</param>
-        public void DeleteRecordById<T>(string table, Guid id)
+        public T? DeleteRecordById<T>(string table, Guid id)
         {
             var collection = _db.GetCollection<T>(table);
             var filter = Builders<T>.Filter.Eq("Id", id);
             collection.DeleteOne(filter);
+            return LoadRecordById<T>(table, id);
         }
 
     }

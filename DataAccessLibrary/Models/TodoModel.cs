@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -14,21 +15,32 @@ namespace DataAccessLibrary.Models
     public class TodoModel
     {
         [BsonId]
-        public Guid Id { get; } = Guid.NewGuid();
+        public Guid Id { get; private set; }
 
         [BsonElement("title")]
-        [BsonRequired]
+        [Required]
         public string? Title { get; set; }
 
         [BsonElement("isComplete")]
-        [BsonRequired]
+        [Required]
         public bool IsComplete { get; set; }
 
         [BsonElement("created")]
-        public DateTime Created { get; } = DateTime.Now;
+        public DateTime Created { get; private set; }
 
         [BsonElement("updated")]
-        public DateTime Updated { get; set; } = DateTime.Now;
+        public DateTime Updated { get; private set; }
 
+        public void Initalize()
+        {
+            Id = Guid.NewGuid();
+            Created = DateTime.Now;
+            Updated = DateTime.Now;
+        }
+
+        public void UpdateTime()
+        {
+            Updated = DateTime.Now;
+        }
     }
 }
