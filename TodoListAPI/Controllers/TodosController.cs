@@ -52,12 +52,15 @@ public class TodosController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(TodoModel))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    // Fix: error handling and model validation
-    // Fix: we should not insert a record into the db if the model is invalid
     public IActionResult CreateTodo([FromBody] TodoModel todo)
     {
         try
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid model object");
+            }
+
             todo.Initalize();
             var newTodo = _db.UpsertRecord(_table, todo, todo.Id);
 
@@ -66,19 +69,14 @@ public class TodosController : ControllerBase
                 return NotFound();
             }
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Invalid model object");
-            }
-
-            return CreatedAtRoute("TodoById", new { id = newTodo.Id }, newTodo);
+            return CreatedAtAction(nameof(GetTodoById), new { id = newTodo.Id }, newTodo);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             _logger.LogError("Something went wrong insde the CreateTodo action: {ex}", ex);
             return StatusCode(500, "Internal server error");
         }
-        
+
     }
 }
 

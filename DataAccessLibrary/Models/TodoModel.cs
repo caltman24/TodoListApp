@@ -23,7 +23,7 @@ namespace DataAccessLibrary.Models
 
         [BsonElement("isComplete")]
         [Required]
-        public bool IsComplete { get; set; }
+        public bool? IsComplete { get; set; }
 
         [BsonElement("created")]
         public DateTime Created { get; private set; }
