@@ -84,7 +84,7 @@ public class TodosController : ControllerBase
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TodoModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult UpdateTodo([FromBody] UpdateTodoDTO todo)
+    public IActionResult UpdateTodo([FromBody] UpdateTodoDTO todo, [FromRoute] Guid id)
     {
         if (!ModelState.IsValid)
         {
@@ -93,6 +93,7 @@ public class TodosController : ControllerBase
 
         var newTodoModel = new TodoModel
         {
+            Id = id,
             Title = todo?.Title,
             IsComplete = todo?.IsComplete,
         };
@@ -105,7 +106,7 @@ public class TodosController : ControllerBase
         {
             return NotFound();
         }
-
+        
         return Ok(newTodoModel);
     }
 }

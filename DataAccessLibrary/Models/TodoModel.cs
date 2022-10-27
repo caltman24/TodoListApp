@@ -15,7 +15,7 @@ namespace DataAccessLibrary.Models
     public class TodoModel
     {
         [BsonId]
-        public Guid Id { get; private set; }
+        public Guid Id { get; set; }
 
         [BsonElement("title")]
         [Required]
