@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using DataAccessLibrary;
 using DataAccessLibrary.Models;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Cors;
+using TodoListAPI.DTO;
 
 namespace TodoListAPI.Controllers;
 
@@ -77,6 +79,34 @@ public class TodosController : ControllerBase
             return StatusCode(500, "Internal server error");
         }
 
+    }
+
+    [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TodoModel))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult UpdateTodo([FromBody] UpdateTodoDTO todo)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Invalid model object");
+        }
+
+        var newTodoModel = new TodoModel
+        {
+            Title = todo?.Title,
+            IsComplete = todo?.IsComplete,
+        };
+
+        newTodoModel.UpdateTime();
+        
+        var updatedTodo = _db.UpsertRecord(_table, newTodoModel, newTodoModel.Id);
+
+        if (updatedTodo == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(newTodoModel);
     }
 }
 

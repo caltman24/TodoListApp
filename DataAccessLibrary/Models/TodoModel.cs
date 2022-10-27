@@ -19,6 +19,7 @@ namespace DataAccessLibrary.Models
 
         [BsonElement("title")]
         [Required]
+        [MaxLength(50)]
         public string? Title { get; set; }
 
         [BsonElement("isComplete")]
