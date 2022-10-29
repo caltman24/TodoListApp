@@ -4,7 +4,6 @@ using DataAccessLibrary;
 using DataAccessLibrary.Models;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Cors;
-using TodoListAPI.DTO;
 
 namespace TodoListAPI.Controllers;
 
@@ -12,102 +11,35 @@ namespace TodoListAPI.Controllers;
 [ApiController]
 public class TodosController : ControllerBase
 {
-    private readonly IConfiguration _config;
-    private readonly IMongoDBDataAccess _db;
     private readonly ILogger _logger;
-    private readonly string _table = "todos";
-
 
     public TodosController(IConfiguration config, ILogger<TodosController> logger)
     {
-        _config = config;
-        _db = new MongoDBDataAccess("TodoListApp", _config.GetConnectionString("Default"));
         _logger = logger;
     }
 
     [HttpGet]
-    [ProducesResponseType(
-        StatusCodes.Status200OK,
-        Type = typeof(IEnumerable<TodoModel>))]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult GetAllTodos()
     {
-        var todos = _db.LoadRecords<TodoModel>(_table);
-        if (todos is null) return NotFound();
-        return Ok(todos);
+        return NotFound();
     }
 
     [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TodoModel))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult GetTodoById([FromRoute] Guid id)
     {
-        var todo = _db.LoadRecordById<TodoModel>(_table, id);
-        if (todo == null)
-        {
-            return BadRequest("Todo object is null");
-        }
-        return Ok(todo);
+        return NotFound();
     }
 
-
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(TodoModel))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public IActionResult CreateTodo([FromBody] TodoModel todo)
+    public IActionResult CreateTodo()
     {
-        try
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Invalid model object");
-            }
-
-            todo.Initalize();
-            var newTodo = _db.UpsertRecord(_table, todo, todo.Id);
-
-            if (newTodo == null)
-            {
-                return NotFound();
-            }
-
-            return CreatedAtAction(nameof(GetTodoById), new { id = newTodo.Id }, newTodo);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Something went wrong insde the CreateTodo action: {ex}", ex);
-            return StatusCode(500, "Internal server error");
-        }
-
+        return NotFound();
     }
 
     [HttpPut("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TodoModel))]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult UpdateTodo([FromBody] UpdateTodoDTO todo, [FromRoute] Guid id)
+    public IActionResult UpdateTodo()
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest("Invalid model object");
-        }
-
-        var newTodoModel = new TodoModel
-        {
-            Id = id,
-            Title = todo?.Title,
-            IsComplete = todo?.IsComplete,
-        };
-
-        newTodoModel.UpdateTime();
-        
-        var updatedTodo = _db.UpsertRecord(_table, newTodoModel, newTodoModel.Id);
-
-        if (updatedTodo == null)
-        {
-            return NotFound();
-        }
-        
-        return Ok(newTodoModel);
+        return NotFound();
     }
 }
 

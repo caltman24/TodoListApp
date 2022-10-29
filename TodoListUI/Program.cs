@@ -30,7 +30,7 @@ Console.ReadLine();
 
 void CreateTodo(TodoModel todo)
 {
-    db.UpsertRecord(collectionName, todo, todo.Id);
+    db.UpdateRecord(collectionName, todo, todo.Id);
     Console.WriteLine($"Todo created: {todo.Title} {todo.Created}");
 }
 
@@ -43,7 +43,7 @@ void DeleteTodo(TodoModel todo)
 void UpdateTodo(TodoModel todo)
 {
     todo.Updated = DateTime.Now;
-    db.UpsertRecord(collectionName, todo, todo.Id);
+    db.UpdateRecord(collectionName, todo, todo.Id);
     Console.WriteLine($"Todo updated: {todo.Title}");
 }
 
