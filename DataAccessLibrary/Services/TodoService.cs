@@ -33,5 +33,15 @@ namespace DataAccessLibrary.Services
         {
             return await _todosCollection.Find(new BsonDocument()).ToListAsync();
         }
+
+        public async Task<TodoModel> GetByIdAsync(Guid id)
+        {
+            return await _todosCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        }
+
+        public async Task InsertTodo(TodoModel todo)
+        {
+            await _todosCollection.InsertOneAsync(todo);
+        }
     }
 }

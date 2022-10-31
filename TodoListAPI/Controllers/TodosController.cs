@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using DataAccessLibrary;
 using DataAccessLibrary.Models;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Cors;
+using DataAccessLibrary.Services;
 
 namespace TodoListAPI.Controllers;
 
@@ -12,28 +11,46 @@ namespace TodoListAPI.Controllers;
 public class TodosController : ControllerBase
 {
     private readonly ILogger _logger;
+    private readonly TodoService _todoService;
 
-    public TodosController(IConfiguration config, ILogger<TodosController> logger)
+    public TodosController(TodoService todoService, ILogger<TodosController> logger)
     {
         _logger = logger;
+        _todoService = todoService;
     }
 
     [HttpGet]
-    public IActionResult GetAllTodos()
+    public async Task<List<TodoModel>> GetAllTodos()
     {
-        return NotFound();
+        return await _todoService.GetAllAsync();
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetTodoById([FromRoute] Guid id)
+    public async Task<IActionResult> GetTodoById([FromRoute] Guid id)
     {
-        return NotFound();
+        var todo =  await _todoService.GetByIdAsync(id);
+
+        if (todo == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(todo);
     }
 
     [HttpPost]
-    public IActionResult CreateTodo()
+    public async Task<IActionResult> CreateTodo([FromBody] TodoModel todo)
     {
-        return NotFound();
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Invalid model");
+        }
+
+        todo.Initalize();
+
+        await _todoService.InsertTodo(todo);
+
+        return CreatedAtAction(nameof(GetTodoById), new { id = todo.Id }, todo);
     }
 
     [HttpPut("{id}")]
