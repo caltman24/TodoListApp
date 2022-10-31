@@ -15,7 +15,7 @@ namespace DataAccessLibrary.Models
     public class TodoModel
     {
         [BsonId]
-        public Guid Id { get; private set; }
+        public Guid? Id { get; private set; }
 
         [BsonElement("title")]
         [Required]
@@ -27,19 +27,19 @@ namespace DataAccessLibrary.Models
         public bool? IsComplete { get; set; }
 
         [BsonElement("created")]
-        public DateTime Created { get; private set; }
+        public DateTime? Created { get; private set; }
 
         [BsonElement("updated")]
-        public DateTime Updated { get; private set; }
+        public DateTime? Updated { get; private set; }
 
-        public void Initalize()
+        internal void Initalize()
         {
             Id = Guid.NewGuid();
             Created = DateTime.Now;
             Updated = DateTime.Now;
         }
 
-        public void UpdateTime()
+        internal void UpdateTime()
         {
             Updated = DateTime.Now;
         }
