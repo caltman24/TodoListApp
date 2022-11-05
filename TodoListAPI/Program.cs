@@ -16,10 +16,6 @@ builder.Services.AddCors(options =>
 // Add services to the container.
 builder.Services.AddControllers();
 
-// Configure MongoDBSettings
-builder.Services.Configure<MongoDBSettings>(
-    builder.Configuration.GetSection("MongoDB")
-);
 // Add Dependencies
 builder.Services.AddSingleton<TodoService>();
 

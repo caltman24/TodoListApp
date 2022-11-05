@@ -12,36 +12,25 @@ namespace DataAccessLibrary.Models
     /// <summary>
     /// Represents the Todo data model
     /// </summary>
-    public class TodoModel
-    {
-        [BsonId]
-        public Guid? Id { get; private set; }
+    public record TodoModel
+    (
+        int? Id,
 
-        [BsonElement("title")]
         [Required]
         [MaxLength(50)]
-        public string? Title { get; set; }
+        string? Title,
 
-        [BsonElement("isComplete")]
+        [MaxLength(500)]
+        string? Description,
+
         [Required]
-        public bool? IsComplete { get; set; }
+        bool? IsComplete,
 
-        [BsonElement("created")]
-        public DateTime? Created { get; private set; }
+        int? UserId
+    )
+    {
+        // To use records with Dapper. You have to declare a parameterless constructor
+        public TodoModel() : this(default, default, default, default, default) { }
+    };
 
-        [BsonElement("updated")]
-        public DateTime? Updated { get; private set; }
-
-        internal void Initalize()
-        {
-            Id = Guid.NewGuid();
-            Created = DateTime.Now;
-            Updated = DateTime.Now;
-        }
-
-        internal void UpdateTime()
-        {
-            Updated = DateTime.Now;
-        }
-    }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using DataAccessLibrary;
 using DataAccessLibrary.Models;
 using DataAccessLibrary.Services;
+using MySql.Data.MySqlClient;
 
 namespace TodoListAPI.Controllers;
 
@@ -20,11 +21,10 @@ public class TodosController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<TodoModel>>> GetAllTodos()
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<TodoModel>))]
+    public async Task<IActionResult> GetAllTodos()
     {
-        var todos =  await _todoService.GetAllAsync();
+        var todos = await _todoService.GetAllAsync();
 
         if (todos == null)
         {
@@ -36,10 +36,9 @@ public class TodosController : ControllerBase
 
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TodoModel))]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetTodoById([FromRoute] Guid id)
+    public async Task<IActionResult> GetTodoById([FromRoute] int id)
     {
-        var todo =  await _todoService.GetByIdAsync(id);
+        var todo = await _todoService.GetByIdAsync(id);
 
         if (todo == null)
         {
@@ -50,49 +49,27 @@ public class TodosController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(TodoModel))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> CreateTodo([FromBody] TodoModel todo)
     {
-        if (!ModelState.IsValid)
+        // TODO: Return the inserted record from the database
+
+        if (todo.UserId <= 0)
         {
-            return BadRequest("Invalid model");
+            return BadRequest($"Invalid userId. Value must be greater than 0. Got {todo.UserId} instead");
         }
 
-        await _todoService.InsertTodoAsync(todo);
-        _logger.LogInformation("Todo Created: {id}", todo.Id);
+        try
+        {
+            await _todoService.InsertAsync(todo);
+            return Ok();
 
-        return CreatedAtAction(nameof(GetTodoById), new { id = todo.Id }, todo);
-    }
-
-    [HttpPut("{id}/Complete")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CompleteTodo([FromRoute] Guid id, [FromBody] bool isComplete)
-    {
-        await _todoService.CompleteTodoAsync(id, isComplete);
-        _logger.LogInformation("Todo Completed: {id} - {complete}", id, isComplete);
-        return Ok();
-    }
-
-    [HttpPut("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> UpdateTodoTitle([FromRoute] Guid id, [FromBody] string title)
-    {
-        await _todoService.UpdateTodoAsync(id, title);
-        _logger.LogInformation("Todo Updated: {id} - {title}", id, title);
-        return Ok();
-    }
-
-
-    [HttpDelete("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> DeleteTodo([FromRoute] Guid id)
-    {
-        await _todoService.DeleteTodoByIdAsync(id);
-        _logger.LogInformation("Todo Deleted: {id}", id);
-        return Ok();
+        } catch (MySqlException ex)
+        {
+            _logger.LogError("There was an error in the CreateTodo action. Error: {ex}", ex);
+            return StatusCode(500, "There was a problem creating the todo. Check if user id exists");
+        }
+        
     }
 }
 
