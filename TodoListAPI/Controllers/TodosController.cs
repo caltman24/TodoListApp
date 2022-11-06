@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using DataAccessLibrary;
+﻿using Microsoft.AspNetCore.Mvc;
 using DataAccessLibrary.Models;
 using DataAccessLibrary.Services;
 using MySql.Data.MySqlClient;
@@ -62,6 +60,7 @@ public class TodosController : ControllerBase
         try
         {
             await _todoService.InsertAsync(todo);
+            _logger.LogInformation("Todo Created: {title}", todo.Title);
             return Ok();
 
         } catch (MySqlException ex)

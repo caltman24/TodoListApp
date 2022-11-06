@@ -1,20 +1,10 @@
 ﻿using DataAccessLibrary.Models;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using MongoDB.Driver.Core.Authentication;
-using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccessLibrary.Services
 {
     /// <summary>
-    /// This class is responsible for executing CRUD opertations against the data access layer
+    /// This class is responsible for executing CRUD against the data access layer
     /// </summary>
     public class TodoService
     {
