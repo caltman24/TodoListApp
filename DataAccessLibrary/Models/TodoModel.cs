@@ -18,13 +18,11 @@ namespace DataAccessLibrary.Models
         string? Description,
 
         [Required]
-        bool? IsComplete,
-
-        int? UserId
+        bool? IsComplete
     )
     {
         // To use records with Dapper. You have to declare a parameterless constructor
-        public TodoModel() : this(default, default, default, default, default) { }
+        public TodoModel() : this(default, default, default, default) { }
     };
 
 }
